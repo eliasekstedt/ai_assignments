@@ -1,12 +1,12 @@
 
-implementation = "my_function_0.R"
+implementation = "my_function_1.R"
 
 library("DeliveryMan")
 source(paste0("implementation/", implementation))
 
 
-result <- testDM(
-  myFunction,
+testDM(
+  manualDM,
   verbose = 0,
   returnVec = FALSE,
   n = 500,
@@ -14,7 +14,6 @@ result <- testDM(
   timeLimit = 250
 )
 
-print(result)
 
 
 
