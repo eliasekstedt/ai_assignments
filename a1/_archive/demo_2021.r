@@ -12,8 +12,8 @@ library("DeliveryMan")
 #help(package = "DeliveryMan")
 print("hejhopp")
 # Read documentation
-# ?runDeliveryMan
-# ?testDM
+?runDeliveryMan
+?testDM
 
 
 myFunction <- function(trafficMatrix, carInfo, packageMatrix) {
@@ -63,16 +63,14 @@ nextMove <- function(trafficMatrix, carInfo, packageMatrix) {
 
 
 
-result <- testDM(
-  myFunction,
+testDM(
+  manualDM,
   verbose = 0,
   returnVec = FALSE,
   n = 500,
   seed = 21,
   timeLimit = 250
 )
-
-print(result)
 
 
 

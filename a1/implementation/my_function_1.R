@@ -10,8 +10,6 @@
 
 
 
-
-
 myFunction <- function(trafficMatrix, carInfo, packageMatrix) {
     # What is our goal?
     if(carInfo$load == 0) {
@@ -22,13 +20,6 @@ myFunction <- function(trafficMatrix, carInfo, packageMatrix) {
 
     # How do we get there?
     carInfo$nextMove <- nextMove(trafficMatrix, carInfo, packageMatrix)
-
-    ###
-    #print(trafficMatrix)
-    # print(packageMatrix)
-    # print(carInfo)
-    #stop()
-    ###
 
     return(carInfo)
 }
@@ -46,6 +37,8 @@ nextMove <- function(trafficMatrix, carInfo, packageMatrix) {
     x_dest <- carInfo$mem$goal[1]
     y_pos <- carInfo$y
     y_dest <- carInfo$mem$goal[2]
+    
+    print(paste0(" ", x_dest, y_dest))
 
     if (x_pos == x_dest && y_pos == y_dest) {
         return(5)
@@ -58,6 +51,7 @@ nextMove <- function(trafficMatrix, carInfo, packageMatrix) {
     go_up <- as.integer(y_pos < y_dest)
     y_step <- 2 * go_up - 1
     cost_y <- heuristic(x_pos, x_dest, y_pos + y_step, y_dest, trafficMatrix)
+
 
     available_paths <- c(2, 4, 6, 8)
     if (x_pos < x_dest) {
@@ -72,9 +66,24 @@ nextMove <- function(trafficMatrix, carInfo, packageMatrix) {
     else {
         available_paths <- available_paths[available_paths != 8]
     }
+    ###
+    #print("")
+    #print(x_pos)
+    #print(x_dest)
+    #print(y_pos)
+    #print(y_dest)
+    #print(available_paths[1])
+    ###
     return(available_paths[1])
 
 
+}
+
+
+stopif <- function(message, pos, values) {
+    if (pos >= 10) {
+        stop(paste0(" ", values))
+    }
 }
 
 
@@ -82,24 +91,29 @@ heuristic <- function(x_pos, x_dest, y_pos, y_dest, trafficMatrix) {
     if (x_pos == x_dest && y_pos == y_dest) {
         return(0)
     }
-    if (x_pos == x_dest) {
-        go_up <- as.integer(y_pos < y_dest)
-        y_step <- 2 * go_up - 1
-        return(heuristic(x_pos, x_dest, y_pos + y_step, y_dest, trafficMatrix) + trafficMatrix$hroads[x_pos, y_pos + go_up])
+    else if (x_pos == x_dest) {
+        go_down <- as.integer(y_pos > y_dest)
+        y_step <- 1 - 2 * go_down
+        #values <- c(y_pos, go_up, y_step, y_dest)
+        #stopif("x_pos == x_dest", y_pos + go_up, values)
+        return(heuristic(x_pos, x_dest, y_pos + y_step, y_dest, trafficMatrix) + trafficMatrix$vroads[x_pos, y_pos - go_down])
     }
     else if (y_pos == y_dest) {
         go_left <- as.integer(x_pos > x_dest)
         x_step <- 1 - 2 * go_left
-        return(heuristic(x_pos + x_step, x_dest, y_pos, y_dest, trafficMatrix) + trafficMatrix$vroads[x_pos-go_left, y_pos])
+        #stopif("y_pos == y_dest", values)
+        return(heuristic(x_pos + x_step, x_dest, y_pos, y_dest, trafficMatrix) + trafficMatrix$hroads[x_pos - go_left, y_pos])
     }
     else {
         go_left <- as.integer(x_pos > x_dest)
         x_step <- 1 - 2 * go_left
-        cost_x <- heuristic(x_pos + x_step, x_dest, y_pos, y_dest, trafficMatrix) + trafficMatrix$vroads[x_pos-go_left, y_pos]
+        #stopif("cost_x", values)
+        cost_x <- heuristic(x_pos + x_step, x_dest, y_pos, y_dest, trafficMatrix) + trafficMatrix$hroads[x_pos - go_left, y_pos]
 
-        go_up <- as.integer(y_pos < y_dest)
-        y_step <- 2 * go_up - 1
-        cost_y <- heuristic(x_pos, x_dest, y_pos + y_step, y_dest, trafficMatrix) + trafficMatrix$hroads[x_pos, y_pos + go_up]
+        go_down <- as.integer(y_pos > y_dest)
+        y_step <- 1 - 2 * go_down
+        #stopif("cost_y", values)
+        cost_y <- heuristic(x_pos, x_dest, y_pos + y_step, y_dest, trafficMatrix) + trafficMatrix$vroads[x_pos, y_pos - go_down]
 
         return(min(cost_x, cost_y))
     }
@@ -107,7 +121,7 @@ heuristic <- function(x_pos, x_dest, y_pos, y_dest, trafficMatrix) {
     
 
 
-    
+
 
 
 
