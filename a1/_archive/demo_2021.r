@@ -27,13 +27,6 @@ myFunction <- function(trafficMatrix, carInfo, packageMatrix) {
   # How do we get there?
   carInfo$nextMove <- nextMove(trafficMatrix, carInfo, packageMatrix)
   
-  ###
-  # print(trafficMatrix)
-  # print(packageMatrix)
-  # print(carInfo)
-  # stop()
-  ###
-  
   return(carInfo)
 }
 
