@@ -5,8 +5,8 @@ library("DeliveryMan")
 source(paste0("implementation/", implementation))
 
 
-view = F # (does not work in vs code)
-if (view) {
+view = F 
+if (view) { # (does not work in vs code)
     runDeliveryMan(
        carReady = myFunction,
        dim = 10,
