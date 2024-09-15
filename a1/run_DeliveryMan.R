@@ -1,11 +1,11 @@
 
-implementation = "my_function_1.R"
+implementation = "my_function_1.1.R"
 
 library("DeliveryMan")
 source(paste0("implementation/", implementation))
 
 
-view = F 
+view = T
 if (view) { # (does not work in vs code)
     runDeliveryMan(
        carReady = myFunction,
@@ -26,28 +26,6 @@ if (view) { # (does not work in vs code)
       timeLimit = 250
     )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
