@@ -30,12 +30,6 @@ nextMove <- function(trafficMatrix, carInfo, packageMatrix) {
     # A* search to find the optimal path to the goal
     path <- aStar(trafficMatrix, start, goal)
     
-    # Display the path (x and y coordinates of each node in order)
-    # cat("\nPath:\n")
-    # for (node in path) {
-    #    cat(paste0("(", node$x, ", ", node$y, ") "))
-    # }
-    
     # Return the first move direction from the path
     if (length(path) > 1) {
         nextNode <- path[[2]]
@@ -55,7 +49,7 @@ aStar <- function(trafficMatrix, start, goal) {
     explored <- list()
     
     while (length(frontier) > 0) {
-        # Find the node with the smallest f value in the frontier
+        # Find the node with the smallest f=g+h value in the frontier
         best_index <- which.min(sapply(frontier, function(node) node$f)) 
         current_node <- frontier[[best_index]] 
         frontier <- frontier[-best_index]  # Remove current node from the frontier
@@ -72,38 +66,50 @@ aStar <- function(trafficMatrix, start, goal) {
         neighbors <- getNeighbors(current_node, trafficMatrix)
         
         for (neighbor in neighbors) {
-            # Calculate g, h, and f for the neighbor
+            # Calculate g, h, and f values for the neighbor
             neighbor$g <- current_node$g + getCost(current_node, neighbor, trafficMatrix)
             neighbor$h <- heuristic(neighbor, goal)
             neighbor$f <- neighbor$g + neighbor$h
             
-            # Check if this neighbor has been explored already
-            if (any(sapply(explored, function(n) n$x == neighbor$x && n$y == neighbor$y))) {
-                next  # Skip this neighbor if it has already been explored
-            }
+            # Skip neighbor if it has already been explored
+            if (isExplored(neighbor, explored)) next
             
-            # Check if this neighbor is already in the frontier
-            match_indices <- sapply(frontier, function(n) !is.null(n) && n$x == neighbor$x && n$y == neighbor$y)
+            # Check if neighbor is already in the frontier
+            existing_index <- getFrontierIndex(neighbor, frontier)
             
-            if (any(match_indices)) {
-                # If the neighbor is already in the frontier, check if this new path is cheaper
-                existing_index <- which(match_indices)[1]  # Get the index of the first match
-                existing_node <- frontier[[existing_index]]
-                if (neighbor$f < existing_node$f) {
-                    # Update the frontier with the new, cheaper node
+            if (!is.null(existing_index)) {
+                # If neighbor is in the frontier, update it if this path is cheaper
+                if (neighbor$f < frontier[[existing_index]]$f) {
                     frontier[[existing_index]] <- neighbor
                 }
             } else {
-                # Add neighbor to the frontier if not already present
+                # If neighbor is not in the frontier, add it
                 frontier <- c(frontier, list(neighbor))
             }
         }
-        a <- 1 # Check if neighbors get added correctly to the frontier
     }
     
     return(list(start))  # Return starting point if no path is found
 }
 
+# Check if the neighbor is already explored
+isExplored <- function(neighbor, explored) {
+    return(any(sapply(explored, function(n) n$x == neighbor$x && n$y == neighbor$y)))
+}
+
+# Get the index of the neighbor in the frontier if it exists, otherwise return NULL
+getFrontierIndex <- function(neighbor, frontier) {
+    # Find matching indices where neighbor's coordinates match with any node in the frontier
+    match_indices <- sapply(frontier, function(n) n$x == neighbor$x && n$y == neighbor$y)
+    
+    # If a match is found, return the index of the first match
+    if (any(match_indices)) {
+        existing_index <- which(match_indices)[1]  # Get the first matching index
+        return(existing_index)
+    } else {
+        return(NULL)  # No match found
+    }
+}
 
 
 # Heuristic function: Manhattan distance
