@@ -1,7 +1,7 @@
 
-getwd()
-file_name = list.files()
+file_name = "R/elias_WheresCroc.R"
 source(file_name)
+#stop()
 
 moveInfo <- list(move=c(0, 1, 0, 2, 0), mem=c())
 readings <- 
