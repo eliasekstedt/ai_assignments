@@ -3,21 +3,28 @@ file_name = "R/elias_WheresCroc.R"
 source(file_name)
 #stop()
 
-moveInfo <- list(move=c(0, 1, 0, 2, 0), mem=c())
-readings <- 
-positions <- 
-edges <- 
-probs <- 
+#myFunction <- randomWC
+#myFunction <- manualWC
+myFunction <- myFunction
 
-#makeMoves <- randomWC(moveInfo, readings, positions, edges, probs)
-makeMoves <- manualWC
+if (T) {
+testWC(
+  myFunction = myFunction,
+    )
+} else {
+  for (i in 1:25) {
+    print(paste0(cat("\n", "round "), i, ", begin!"))
+    runWheresCroc(
+      myFunction,
+      doPlot = T,
+      showCroc = T,
+      pause = 1,
+      verbose = T,
+      returnMem = F,
+      mem = NA
+      ) 
+  }
 
-runWheresCroc(
-  makeMoves,
-  doPlot = T,
-  showCroc = T,
-  pause = 1,
-  verbose = T,
-  returnMem = F,
-  mem = NA
-  )
+}
+# 
+

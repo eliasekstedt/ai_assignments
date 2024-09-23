@@ -1,3 +1,82 @@
+# 27 : 77.136|70.358
+# 9  : 139.372|122.388
+# 33 : 104.912|96.9
+# 20 : 89.92|81.676
+# 17 : 80.172|77.158
+# 25 : 76.336|75
+get_prob_of_node <- function(measures, means, sds) {
+  nr_measures <- length(measures)
+  probs_by_measure_type <- c()
+  for (i in 1:nr_measures) {
+    probs_by_measure_type <- c(probs_by_measure_type, dnorm(measures[i], mean=means[i], sd=sds[i]))
+  }
+  return(prod(probs_by_measure_type))
+}
+
+get_ml_node <- function(readings, probs) {
+  nr_nodes <- dim(probs$salinity)[1]
+  probs_node <- c()
+  for (i_node in 1:nr_nodes) {
+    means_node <- c(probs$salinity[i_node, 1], probs$phosphate[i_node, 1], probs$nitrogen[i_node, 1])
+    sds_node <- c(probs$salinity[i_node, 2], probs$phosphate[i_node, 2], probs$nitrogen[i_node, 2])
+    probs_node <- c(probs_node, get_prob_of_node(readings, means=means_node, sds=sds_node))
+  }
+  ml_node_i <- which(probs_node == max(probs_node))
+  return(c(ml_node_i, probs_node[ml_node_i]))
+}
+
+get_move <- function(i_node, target, readings, edges, probs) {
+  options <- getOptions(i_node, edges)
+  if (i_node == target) {
+    move <- 0
+  } else {
+    if (target %in% options) {
+      move <- target
+    } else if (all(options < target)) {
+      move <- max(options)
+    } else if (all(options > target)) {
+      move <- min(options)
+    }
+    else {
+      move <- sample(options[which(abs(options-target) == min(abs(options-target)))], 1)
+    }
+  }
+  return(move)
+}
+
+find_moves <- function(readings, positions, edges, probs) {
+
+  #print(readings)
+  #print(positions)
+  #print(probs)
+  #stop()
+
+  i_node <- positions[3]
+
+  target <- get_ml_node(readings, probs)[1]
+  move_1 <- get_move(i_node, target, readings, edges, probs)
+
+
+  means_node <- c(probs$salinity[i_node, 1], probs$phosphate[i_node, 1], probs$nitrogen[i_node, 1])
+  sds_node <- c(probs$salinity[i_node, 2], probs$phosphate[i_node, 2], probs$nitrogen[i_node, 2])
+  prob_node <- get_prob_of_node(readings, means=means_node, sds=sds_node)
+  if (prob_node > 1e-03) {
+    move_2 <- 0
+  } else {
+    move_2 <- get_move(move_1, target, readings, edges, probs)
+  }
+  return(c(move_1, move_2))
+}
+
+myFunction <- function(moveInfo, readings, positions, edges, probs) {
+
+  moveInfo$moves <- find_moves(readings, positions, edges, probs)
+  #moveInfo$moves=c(sample(getOptions(positions[3],edges),1),0)
+  #print(moveInfo$moves)
+  #stop()
+  return(moveInfo)
+}
+
 #' randomWC
 #'
 #' Control function for Where's Croc where moves are random.
