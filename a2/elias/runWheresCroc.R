@@ -1,6 +1,6 @@
 
-file_name = "R/elias_WheresCroc.R"
-source(file_name)
+source("R/WheresCroc.R")
+source("elias/myFunction0.R")
 #stop()
 
 #myFunction <- randomWC
@@ -10,6 +10,8 @@ myFunction <- myFunction
 if (T) {
 testWC(
   myFunction = myFunction,
+  verbose=1,
+  returnVec=T,
     )
 } else {
   for (i in 1:25) {
