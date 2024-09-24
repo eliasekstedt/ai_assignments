@@ -1,11 +1,6 @@
 
 source("R/WheresCroc.R")
-source("elias/myFunction0.R")
-#stop()
-
-#myFunction <- randomWC
-#myFunction <- manualWC
-myFunction <- myFunction
+source("elias/myFunction1.R")
 
 if (T) {
 testWC(
