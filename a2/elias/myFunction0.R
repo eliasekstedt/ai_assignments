@@ -59,6 +59,5 @@ find_moves <- function(moveInfo, readings, positions, edges, probs) {
 
 myFunction <- function(moveInfo, readings, positions, edges, probs) {
   moveInfo <- find_moves(moveInfo, readings, positions, edges, probs)
-
   return(moveInfo)
 }

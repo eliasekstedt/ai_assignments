@@ -1,5 +1,4 @@
 
-source("R/WheresCroc.R")
 source("elias/myFunction1.R")
 
 if (T) {
@@ -23,5 +22,5 @@ testWC(
   }
 
 }
-# 
+
 

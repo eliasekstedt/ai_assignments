@@ -1,3 +1,14 @@
+# save between steps
+* computed probabilities for each node (a matrix)
+* searched nodes (according to instructions)
+
+# node prob computation
+* current node prob given readings X SUM_over_neighbor(previous_neighbor_probs) X 1/nr_neighbors aka, transition_prob
+
+######
+######
+######
+
 
 runWheresCroc(makeMoves, doPlot = T, showCroc = F, pause = 1,
   verbose = T, returnMem = F, mem = NA)
