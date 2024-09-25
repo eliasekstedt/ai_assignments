@@ -104,11 +104,6 @@ testWC=function(myFunction,verbose=0,returnVec=FALSE,n=500,seed=21,timeLimit=300
     cat("\nMean moves:", mean(hmm))
     cat("\nSD moves:", sd(hmm))
     cat("\nTime taken:",as.numeric(endTime)-as.numeric(startTime),"seconds.")
-    library(ggplot2)
-    df <- data.frame(values = hmm)
-    ggplot(df, aes(x = values)) +
-      geom_histogram(binwidth = 1, color = "black", fill = "lightblue") +
-      labs(title = "Histogram of Vector Elements", x = "Values", y = "Frequency")
   }
   if (returnVec)
     return (hmm)
