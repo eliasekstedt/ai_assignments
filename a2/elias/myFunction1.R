@@ -10,13 +10,13 @@ myFunction <- function(moveInfo, readings, positions, edges, dnorm_params) {
     
     pos_ranger <- positions[3]
     targets <- get_targets(p)
-    move_1 <- get_move(pos_ranger, targets, readings, edges, p)
+    move_1 <- get_move(pos_ranger, targets, edges, p)
     if (move_1 == 0) {
         p[pos_ranger] <- nearly_zero()
         targets <- get_targets(p)
-        move_2 <- get_move(pos_ranger, targets, readings, edges, p)
+        move_2 <- get_move(pos_ranger, targets, edges, p)
     } else {
-        move_2 <- get_move(move_1, targets, readings, edges, p)
+        move_2 <- get_move(move_1, targets, edges, p)
     }
     if (move_2 == 0) {
         p[move_1] <- nearly_zero()
@@ -48,7 +48,7 @@ find_path_to_target <- function(i_node, targets, edges, p, record=c()) {
         return(length(record))
     } else {
         record <- c(record, i_node)
-        options <- get_options(i_node, edges)
+        options <- getOptions(i_node, edges)
         options <- options[!(options %in% record)]
         record_lengths <- c()
         for (option in options) {
@@ -63,8 +63,13 @@ get_move <- function(i_node, targets, edges, p, record=c()) {
         return(0)  # alt: ml next
     } else {
         record <- i_node
-        options <- 
-        
+        options <- getOptions(i_node, edges)
+        options <- options[options != i_node]
+        record_lengths <- c()
+        for (option in options) {
+            record_lengths <- c(record_lengths, find_path_to_target(i_node, targets, edges, p, c(record)))
+        }
+        return(options[which(record_lengths) == min(record_lengths)])
     }
 }
 
