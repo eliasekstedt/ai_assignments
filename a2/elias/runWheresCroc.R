@@ -1,12 +1,12 @@
 
 source("elias/myFunction1.R")
 
-if (T) {
+if (F) {
   hmm <- testWC(
     myFunction = myFunction,
     verbose=1,
     returnVec=T,
-    #n=5000
+    n=500
       )
   
   cat("\nmin   : ", min(hmm))
@@ -19,13 +19,13 @@ if (T) {
     labs(title = "nr moves per sim", x = "moves", y = "Frequency")
 
 } else {
-  for (i in 1:25) {
+  for (i in 1:1) {
     print(paste0(cat("\n", "round "), i, ", begin!"))
     runWheresCroc(
       myFunction,
       doPlot = T,
       showCroc = T,
-      pause = 0.1,
+      pause = 1,
       verbose = T,
       returnMem = F,
       mem = NA
