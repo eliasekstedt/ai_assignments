@@ -1,7 +1,7 @@
 
 source("elias/myFunction1.R")
 
-if (F) {
+if (T) {
   hmm <- testWC(
     myFunction = myFunction,
     verbose=1,
@@ -19,7 +19,7 @@ if (F) {
     labs(title = "nr moves per sim", x = "moves", y = "Frequency")
 
 } else {
-  for (i in 1:1) {
+  for (i in 1:25) {
     print(paste0(cat("\n", "round "), i, ", begin!"))
     runWheresCroc(
       myFunction,

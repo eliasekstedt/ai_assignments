@@ -40,10 +40,20 @@
 #}
 #replicate(3, nearly_zero())
 
-vector <- c(1, 2, 3, 4, 5)
-nvector <- vector / sum(vector)
-print(nvector)
-print(sum(nvector))
+#vector <- c(1, 2, 3, 4, 5)
+#nvector <- vector / sum(vector)
+#print(nvector)
+#print(sum(nvector))
 
+#vtest <- function() {
+#  return(c(cost=1, top_p=2))
+#}
 
+#path_yield <- vtest()
+#print(path_yield)
+#print(path_yield["cost"] + path_yield["top_p"])
+
+v <- rep(Inf, 5)
+print(which(v==Inf))
+print(min(v))
 
