@@ -10,6 +10,7 @@ myFunction <- function(moveInfo, readings, positions, edges, dnorm_params) {
     
     pos_ranger <- positions[3]
     targets <- get_targets(p)
+
     move_1 <- get_move(pos_ranger, targets, edges, p)
     if (move_1 == 0) {
         p[pos_ranger] <- nearly_zero()
@@ -20,7 +21,6 @@ myFunction <- function(moveInfo, readings, positions, edges, dnorm_params) {
     }
     if (move_2 == 0) {
         p[move_1] <- nearly_zero()
-        targets <- get_targets(p)
     }
     
     moveInfo$last_p <- normalize(p)
@@ -157,20 +157,11 @@ nearly_zero <- function() {
     return(runif(1, 1e-50, 1e-49))
 }
 
-
-
-
-
-
-
-
-
-get_p_neighboring_wrong_but_faster <- function(edges, last_p, nr_nodes) {
-    p <- c()
-    for (i in 1:nr_nodes) {
-        neighbors <- getOptions(i, edges)
-        p <- c(p, sum(last_p[neighbors]) / length(neighbors)) 
-    }
-    return(p)
-}
-
+#get_p_neighboring_wrong_but_faster <- function(edges, last_p, nr_nodes) {
+#    p <- c()
+#    for (i in 1:nr_nodes) {
+#        neighbors <- getOptions(i, edges)
+#        p <- c(p, sum(last_p[neighbors]) / length(neighbors)) 
+#    }
+#    return(p)
+#}

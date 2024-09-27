@@ -24,7 +24,7 @@ if (T) {
 } else {
   N <- 1
   for (i in 1:N) {
-    print(paste0(cat("\n", "round "), i, ", begin!"))
+    cat("\n", "round ", i, ", begin!")
     runWheresCroc(
       myFunction,
       doPlot = T,
