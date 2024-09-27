@@ -2,11 +2,12 @@
 source("elias/myFunction1.R")
 
 if (T) {
+  N = 500
   hmm <- testWC(
     myFunction = myFunction,
     verbose=1,
     returnVec=T,
-    n=500
+    n=N
       )
   
   cat("\nmin   : ", min(hmm))
@@ -16,10 +17,13 @@ if (T) {
   df <- data.frame(values = hmm)
   ggplot(df, aes(x = values)) +
     geom_histogram(binwidth = 1, color = "black", fill = "lightblue") +
-    labs(title = "nr moves per sim", x = "moves", y = "Frequency")
+    labs(title = "nr moves per sim", x = "moves", y = "Frequency") #+
+    #ylim(0, 75*N/500) +
+    #xlim(0, 45)
 
 } else {
-  for (i in 1:25) {
+  N <- 1
+  for (i in 1:N) {
     print(paste0(cat("\n", "round "), i, ", begin!"))
     runWheresCroc(
       myFunction,
@@ -29,9 +33,8 @@ if (T) {
       verbose = T,
       returnMem = F,
       mem = NA
-      ) 
+      )
   }
-
 }
 
 

@@ -23,15 +23,8 @@ myFunction <- function(moveInfo, readings, positions, edges, dnorm_params) {
         targets <- get_targets(p)
     }
     
-    #cat("\n", sum(moveInfo$last_p))
     moveInfo$last_p <- normalize(p)
     moveInfo$moves <- c(move_1, move_2)
-    #cat(
-    #    "\n",
-    #    "\n", positions, "|", getOptions(positions[3], edges),
-    #    "\n", targets, "|", moveInfo$last_p[targets],
-    #    "\n", moveInfo$moves
-    #    )
     return(moveInfo)
 }
 
@@ -77,58 +70,51 @@ get_p_neighboring <- function(edges, last_p, nr_nodes) {
 }
 
 get_move <- function(node, targets, edges, p) {
-    if (node %in% targets) {
-        #print("---------found----")
+    if (node %in% targets) { # aka, if node on any of the targets
         return(0)
     } else {
         options <- getOptions(node, edges)
         targets_in_options <- targets[targets %in% options]
         p_targets_in_options <- normalize(p)[targets_in_options]
-        if (length(targets_in_options) > 0) {
-            #print("--------------near")
+        if (length(targets_in_options) > 0) { # aka, if any target is next to the node
             return(targets_in_options[which(p_targets_in_options == max(p_targets_in_options))][1])
-        } else {
-            explored <- list(visited=options, depth=0)
+        } else { # recursively search the shortest path to the main target if it is nearby
+            visited <- options
+            depth <- 1
             costs <- c()
             for (option in options) {
-                costs <- c(costs, explore(option, targets[1], edges, p, explored))
+                costs <- c(costs, explore(option, targets[1], edges, visited, depth))
             }
-            if (min(costs) != Inf) {
-                #print("----smart---------")
+            if (min(costs) != Inf) { # aka, recursive search did not find the main target nearby
                 return(options[which(costs == min(costs))][1])
-            } else {
-                #print("dumb--------------")
-                return(get_move_in_general_direction(node, targets[1], edges, p))
+            } else { # use crude but efficient method to move in the general direction of the main target
+                return(get_move_in_general_direction(node, targets[1], edges))
             }
         }
     }
 }
 
-explore <- function(node, main_target, edges, p, explored) {
-    explored$depth <- explored$depth + 1
+explore <- function(node, main_target, edges, visited, depth) {
     options <- getOptions(node, edges)
-    options <- options[!(options %in% explored$visited)]
-    if (length(options) == 0 | explored$depth > 5) {
+    options <- options[!(options %in% visited)]
+    if (length(options) == 0 | depth > 5) { # lower max depth -> faster runtimes
         return(Inf)
     } else if (main_target %in% options) {
-        #print("main_target found")
-        #print(explored$depth)
-        return(explored$depth)
+        return(depth)
     } else {
-        explored$visited <- c(explored$visited, options)
+        visited <- c(visited, options)
         costs <- c()
         for (option in options) {
             costs <- c(
                 costs,
-                explore(option, main_target, edges, p, explored)
+                explore(option, main_target, edges, visited, depth + 1)
                 )
         }
-        #cat("\n", costs, "|", min(costs))
         return(min(costs))
     }
 }
 
-get_move_in_general_direction <- function(node, main_target, edges, p) {
+get_move_in_general_direction <- function(node, main_target, edges) {
     options <- getOptions(node, edges)
     if (all(options < main_target)) {
         return(max(options))
@@ -136,7 +122,11 @@ get_move_in_general_direction <- function(node, main_target, edges, p) {
         return(min(options))
     }
     else {
-        return(sample(options[which(abs(options - main_target) == min(abs(options - main_target)))], 1))
+        node_value_dist <- abs(options - main_target)
+        opt_ids <- which(node_value_dist == min(node_value_dist))
+        qualifying_options <- options[opt_ids]
+        move <- sample(c(qualifying_options, qualifying_options), size=1) # c(x,x) instead of x cause R is weird...
+        return(move)
     }
 }
 
@@ -157,12 +147,10 @@ apply_backpacker_info <- function(positions, p, nr_nodes) {
 get_targets <- function(p) {
     nr_targets <- 3
     return(order(p, decreasing = TRUE)[1:nr_targets]) #
-    #return(sample(1:40, 3)) # random targeting
 }
 
 normalize <- function(vector) {
     return(vector / sum(vector))
-    #return((vector - min(vector)) / (max(vector) - min(vector)))
 }
 
 nearly_zero <- function() {

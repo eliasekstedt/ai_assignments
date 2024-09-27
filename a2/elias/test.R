@@ -53,7 +53,12 @@
 #print(path_yield)
 #print(path_yield["cost"] + path_yield["top_p"])
 
-v <- rep(Inf, 5)
-print(which(v==Inf))
-print(min(v))
+#v <- rep(Inf, 5)
+#print(which(v==Inf))
+#print(min(v))
+
+a <- c(35)
+#b <- c(a, a)
+#print(b)
+print(sample(a, size=1, replace = F))
 
